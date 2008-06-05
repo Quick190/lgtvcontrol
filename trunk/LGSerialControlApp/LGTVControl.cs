@@ -42,7 +42,17 @@ namespace LGSerialControlApp {
             string resp = sendLGCommand("xb", "FF");
             int currInp = parseLGResponseInt(resp);
             Console.Out.WriteLine("Current Input:" + currInp);
-            currentMainInput = (LGTVInput) currInp;
+            switch (currInp) {
+                case 23:
+                    currentMainInput = LGTVInput.AV1;
+                    break;
+                case 1:
+                    currentMainInput = LGTVInput.TVCable;
+                    break;
+                case 90:
+                    currentMainInput = LGTVInput.HDMIDVI1;
+                    break;
+            }
             Console.Out.WriteLine("CurrInputEnum:" + currentMainInput);
         }
 
