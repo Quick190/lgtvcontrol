@@ -4,7 +4,7 @@ using System.Windows.Forms;
 namespace LGSerialControlApp {
     public partial class Form1 : Form {
         private LGTVControl control;
-        private bool readingValues = true;
+        private Boolean readingValues = true;
 
         public Form1() {
             InitializeComponent();
@@ -12,6 +12,11 @@ namespace LGSerialControlApp {
 
         private void Form1_Load(object sender, EventArgs e) {
             control = new LGTVControl();
+            readFromTVAndApplyToInterface();
+        }
+
+        private void readFromTVAndApplyToInterface() {
+            readingValues = true;
             control.readAllCurrentValues();
 
             trackBar1.Value = control.currentVol;
@@ -32,6 +37,7 @@ namespace LGSerialControlApp {
             readingValues = false;
         }
 
+        #region Interface handlers
         private void trackBar1_Scroll(object sender, EventArgs e) {
             if (readingValues) return;
             chkMute.Checked = false;
@@ -55,5 +61,22 @@ namespace LGSerialControlApp {
             if (readingValues) return;
             control.setVolumeMuted(chkMute.Checked);
         }
+        #endregion
+
+        private void btnGetInfoFromTV_Click(object sender, EventArgs e)
+        {
+            this.readFromTVAndApplyToInterface();
+        }
+
+        private void btnTVOFF_Click(object sender, EventArgs e)
+        {
+            control.setPower(false);
+        }
+
+        private void btnTvON_Click(object sender, EventArgs e)
+        {
+            control.setPower(true);
+        }
+
     }
 }
