@@ -84,6 +84,7 @@ namespace LGSerialControlApp {
         #endregion
 
         public void SetaVolume(int vol) {
+            Console.Out.WriteLine("*** Setting volume: " + vol);
             String resp = sendLGCommand("kf", padValueForLGHex(vol));
         }
 
@@ -111,11 +112,12 @@ namespace LGSerialControlApp {
         }
 
         public void setMainInputSource(LGTVInput input) {
-            Console.Out.WriteLine("Setting Main input to " + input);
+            Console.Out.WriteLine("**** Setting Main input to " + input);
             String resp = sendLGCommand("xb", padValueForLGInt(Convert.ToInt32(input)));
         }
 
         public void setVolumeMuted(bool muted) {
+            Console.Out.WriteLine("*** Setting muted: " + muted);
             string resp = sendLGCommand("ke", muted ? "0" : "1");
         }
 
@@ -133,6 +135,11 @@ namespace LGSerialControlApp {
         }
 
         #endregion
+
+        public void setPower(bool tp) {
+            Console.Out.WriteLine("**** Setting power to " + tp);
+            string resp = sendLGCommand("ka", tp ? "1" : "0");
+        }
     }
 
     public enum LGTVInput {
