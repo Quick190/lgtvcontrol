@@ -1,0 +1,8 @@
+C:\Users\pardini\Documents\Visual Studio 2008\Projects\LGSerialControlApp\LGSerialControlApp\bin\Debug\LGSerialControlApp.exe
+C:\Users\pardini\Documents\Visual Studio 2008\Projects\LGSerialControlApp\LGSerialControlApp\bin\Debug\LGSerialControlApp.pdb
+C:\Users\pardini\Documents\Visual Studio 2008\Projects\LGSerialControlApp\LGSerialControlApp\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\pardini\Documents\Visual Studio 2008\Projects\LGSerialControlApp\LGSerialControlApp\obj\Debug\LGSerialControlApp.Properties.Resources.resources
+C:\Users\pardini\Documents\Visual Studio 2008\Projects\LGSerialControlApp\LGSerialControlApp\obj\Debug\LGSerialControlApp.csproj.GenerateResource.Cache
+C:\Users\pardini\Documents\Visual Studio 2008\Projects\LGSerialControlApp\LGSerialControlApp\obj\Debug\LGSerialControlApp.exe
+C:\Users\pardini\Documents\Visual Studio 2008\Projects\LGSerialControlApp\LGSerialControlApp\obj\Debug\LGSerialControlApp.pdb
+C:\Users\pardini\Documents\Visual Studio 2008\Projects\LGSerialControlApp\LGSerialControlApp\obj\Debug\LGSerialControlApp.Form1.resources
