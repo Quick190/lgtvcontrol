@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Globalization;
 using System.IO.Ports;
 using System.Threading;
 
 namespace LGSerialControlApp {
     public class LGTVControl {
-        private readonly SerialPort sp;
-        public int currentVol;
-        public LGTVInput currentMainInput;
         private const string LGID = "01";
+        private readonly SerialPort sp;
+        public LGTVInput currentMainInput;
+        public int currentVol;
 
 
         public LGTVControl() {
@@ -25,10 +26,10 @@ namespace LGSerialControlApp {
         }
 
         #region Readers, to get current values from TV
-        public void readAllCurrentValues()
-        {
-            this.readCurrentVolume();
-            this.readCurrentMainInput();
+
+        public void readAllCurrentValues() {
+            readCurrentVolume();
+            readCurrentMainInput();
         }
 
         public void readCurrentVolume() {
@@ -41,37 +42,39 @@ namespace LGSerialControlApp {
             string resp = sendLGCommand("xb", "FF");
             int currInp = parseLGResponseInt(resp);
             Console.Out.WriteLine("Current Input:" + currInp);
+            currentMainInput = (LGTVInput) currInp;
+            Console.Out.WriteLine("CurrInputEnum:" + currentMainInput);
         }
+
         #endregion
 
         #region Response parsers, very horrible code, ack.
 
         private int parseLGResponseHexa(string resp) {
-            String[] splitter = new string[1];
+            var splitter = new string[1];
             splitter[0] = "OK";
             String[] partes = resp.Split(splitter, StringSplitOptions.RemoveEmptyEntries);
             String naco = partes[1];
             String num = naco.Substring(0, 2);
-            int decAgain = int.Parse(num, System.Globalization.NumberStyles.HexNumber);
+            int decAgain = int.Parse(num, NumberStyles.HexNumber);
             return decAgain;
         }
 
 
-        private int parseLGResponseInt(string resp)
-        {
-            String[] splitter = new string[1];
+        private int parseLGResponseInt(string resp) {
+            var splitter = new string[1];
             splitter[0] = "OK";
             String[] partes = resp.Split(splitter, StringSplitOptions.RemoveEmptyEntries);
             String naco = partes[1];
             String num = naco.Substring(0, 2);
-            int decAgain = int.Parse(num, System.Globalization.NumberStyles.Integer);
+            int decAgain = int.Parse(num, NumberStyles.Integer);
             return decAgain;
         }
 
         #endregion
 
         public void SetaVolume(int vol) {
-            String resp = sendLGCommand("kf", vol.ToString("X"));
+            String resp = sendLGCommand("kf", padValueForLGHex(vol));
         }
 
         public string sendLGCommand(String command, String value) {
@@ -79,8 +82,14 @@ namespace LGSerialControlApp {
             Console.Out.WriteLine("Command:" + commandFull.Trim());
             sp.WriteLine(commandFull);
             Thread.Sleep(50);
-            string resp = sp.ReadLine();
-            Console.Out.WriteLine("Response:" + resp.Trim());
+            string resp = "";
+            try {
+                resp = sp.ReadLine();
+                Console.Out.WriteLine("Response:" + resp.Trim());
+            }
+            catch (Exception) {
+                Console.Out.WriteLine("Response timed OUT!");
+            }
             sp.DiscardInBuffer();
             sp.DiscardOutBuffer();
             Thread.Sleep(50);
@@ -91,9 +100,34 @@ namespace LGSerialControlApp {
             sp.Close();
         }
 
+        public void setMainInputSource(LGTVInput input) {
+            Console.Out.WriteLine("Setting Main input to " + input);
+            String resp = sendLGCommand("xb", padValueForLGInt(Convert.ToInt32(input)));
+        }
+
+        public void setVolumeMuted(bool muted) {
+            string resp = sendLGCommand("ke", muted ? "0" : "1");
+        }
+
+        #region Helpers for sending values to TV
+
+        private static String padValueForLGInt(int value) {
+            if (value > 9) return value.ToString();
+            return "0" + value;
+        }
+
+        private static String padValueForLGHex(int value) {
+            string hexpart = value.ToString("X");
+            if (hexpart.Length > 1) return hexpart;
+            return "0" + hexpart;
+        }
+
+        #endregion
     }
 
     public enum LGTVInput {
-        
+        TVCable = 10,
+        AV1 = 20,
+        HDMIDVI1 = 90,
     }
 }
